@@ -1,35 +1,33 @@
 import requests
+from ping3 import ping
 import os
 import time
 
-hostname = 'http://192.168.100.3'
-wifiname = '(0__0)'
-interfacename = 'wlan2'
+hostname = '192.168.43.1'  # router's ip
+wifi_name = 'Alquenda'
+interface_name = 'Wi-Fi'  # Wi-Fi, Ethernet, etc
 
-while 1 == 1:
-        i = 1
-        countokconnect = 0
-        countokconnecttotal = 0
-        while i <= 4:
-                try: 
-                        session = requests.Session()
-                        response = session.get( hostname )
-                        estado = response.status_code
-                        
-                        if estado == 200:
-                                estado_script = "200"
-                                countokconnect = countokconnect + 1
-                except:
-                        estado_script = "error"     
+while True:
+    i = 1
+    count_ok_connect = 0
+    count_ok_connect_total = 0
+    while i <= 4:
+        p = ping(hostname)
 
-                print( "Estado de Conexion del WIFI : ", estado_script )
-                i = i + 1
-                time.sleep(1)
-
-        print( "4 HTTP GET CONNECT enviados : ", countokconnect ," resividos" )      
-        if countokconnect == 0:
-                print('Desconectado del WIFI ...')
-                print('Ejecutando reconexion en WIFI ...')
-                response = os.system("netsh wlan connect name='"+wifiname+"' interface='"+interfacename+"'' ")
+        if p:
+            estado_conexion = "Connected"
+            count_ok_connect = count_ok_connect + 1
         else:
-                print('Conectado al WIFI ...')
+            estado_conexion = "error"
+
+        print("Estado de conexion del WIFI : ", estado_conexion)
+        i = i + 1
+        time.sleep(1)
+
+    print("4 ping enviados : ", count_ok_connect, " recibidos")
+    if count_ok_connect == 0:
+        print('Desconectado del WIFI ...')
+        print('Ejecutando reconexión en WIFI ...')
+        response = os.system('netsh wlan connect name="' + wifi_name + '" interface="' + interface_name + '"')
+    else:
+        print('Conectado al WIFI ...')
