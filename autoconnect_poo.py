@@ -41,7 +41,7 @@ class Reconnect(object):
             self.stay_connected()
 
 
-r = Reconnect("10.40.46.4", "Router", "Wi-Fi")
+r = Reconnect("10.40.46.4", "Router", "Wi-Fi") # each one instance Reconnect class with his own connection values
 
 if __name__ == "__main__":
     r.stay_connected()
